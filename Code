@@ -1,0 +1,226 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import sklearn
+from sklearn.model_selection import train_test_split
+from imblearn.over_sampling import SMOTE
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import accuracy_score, classification_report
+from sklearn.linear_model import LogisticRegression
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.svm import SVC
+from sklearn.ensemble import GradientBoostingClassifier
+data = pd.read_csv('/content/creditcard.csv')
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 21878 entries, 0 to 21877
+Data columns (total 31 columns):
+ 
+      dtype='object')
+data.drop(columns=['Time'],inplace=True)
+background_color = '#CCFF80'
+color_palette=['#2769FE', '#FF5F57', '#4dad82', '#230F88', '#0E0330']
+X = data.drop('Class', axis=1)
+y = data['Class']
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+fraud = df[df['Class'] == 1]
+normal = df[df['Class'] == 0]
+fraud['Amount'].describe()
+normal['Amount'].describe()
+fig = plt.figure(figsize=(8, 5))
+
+fig.set_facecolor(background_color)
+plt.gca().set_facecolor(background_color)
+ax = plt.gca()
+
+ax.spines['right'].set_visible(False)
+ax.spines['top'].set_visible(False)
+ax.spines['left'].set_visible(True)
+ax.spines['bottom'].set_visible(True)
+
+plt.subplots_adjust(left=0, bottom=0, right=1, top=1, wspace=0, hspace=0)
+
+plt.plot(normal['Amount'], label='Normal', color=color_palette[0])
+plt.plot(fraud['Amount'], label='Fraud', color=color_palette[1])
+
+plt.title('Amount in Fraud vs Normal Transactions')
+plt.xlabel('Index')
+plt.ylabel('Amount')
+plt.legend(loc='upper right')
+
+plt.show()
+fraud['Time'].describe()
+normal['Time'].describe()
+import seaborn as sns
+
+# Determine the number of plots and rows needed
+num_plots = len(fraud.columns)
+num_cols = 6
+num_rows = (num_plots + num_cols - 1) // num_cols
+
+# Create the figure and grid of subplots
+fig, axes = plt.subplots(num_rows, num_cols, figsize=(20, num_rows * 4))
+fig.patch.set_facecolor(background_color)
+
+# Flatten the axes array for easier iteration
+axes = axes.flatten()
+
+# Plot KDEs for each feature
+for ax, column in zip(axes, fraud.columns):
+    # Plot KDE for fraud and normal data
+    sns.kdeplot(fraud[column], ax=ax, label='Fraud', fill=True, color=color_palette[0])
+    sns.kdeplot(normal[column], ax=ax, label='Normal', fill=True, color=color_palette[1])
+
+    # Customize subplot appearance
+    ax.grid(color='#000000', linestyle=':', axis='y', zorder=0, dashes=(1, 5))
+    ax.set_facecolor(background_color)
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+    ax.legend(loc='upper right', frameon=False)
+
+# Hide extra subplots if necessary
+for ax in axes[num_plots:]:
+    ax.set_visible(False)
+
+plt.tight_layout()
+plt.show()
+import pandas as pd
+
+# Assuming '/content/creditcard.csv' is the file path to your CSV file
+new_df = pd.read_csv('/content/creditcard.csv')
+
+# Now you can proceed with filtering the DataFrame and visualizing the data
+fraud = new_df[new_df['Class'] == 1]
+normal = new_df[new_df['Class'] == 0]
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Filter the DataFrame to separate fraud and normal transactions
+fraud = new_df[new_df['Class'] == 1]
+normal = new_df[new_df['Class'] == 0]
+
+# Determine the number of features (columns) in the fraud DataFrame
+num_plots = len(fraud.columns)
+
+# Define the number of columns in the subplot grid
+num_cols = 6
+
+# Calculate the number of rows needed based on the number of columns and plots
+num_rows = (num_plots + num_cols - 1) // num_cols
+
+# Create the figure and subplot grid
+fig, axes = plt.subplots(num_rows, num_cols, figsize=(20, num_rows * 4))
+fig.patch.set_facecolor(background_color)
+
+# Flatten the axes array for easier iteration
+axes = axes.flatten()
+
+# Iterate over each feature (column) in the fraud DataFrame
+for ax, column in zip(axes, fraud.columns):
+    # Plot KDE for fraud and normal transactions on the same subplot
+    sns.kdeplot(fraud[column], ax=ax, label='Fraud', fill=True, color=color_palette[0])
+    sns.kdeplot(normal[column], ax=ax, label='Normal', fill=True, color=color_palette[1])
+
+    # Customize subplot appearance
+    ax.grid(color='#000000', linestyle=':', axis='y', zorder=0, dashes=(1, 5))
+    ax.set_facecolor(background_color)
+    for s in ["top", "right", "left"]:
+        ax.spines[s].set_visible(False)
+    ax.legend(loc='upper right', frameon=False)
+
+# Hide extra subplots if the number of plots is not divisible by the number of columns
+if num_plots % num_cols != 0:
+    for ax in axes[num_plots:]:
+        ax.set_visible(False)
+
+# Adjust subplot layout to prevent overlapping
+plt.tight_layout()
+
+# Display the plot
+plt.show()
+fig, ax = plt.subplots(figsize=(10, 6))
+fig.patch.set_facecolor(background_color)
+ax.set_facecolor(background_color)
+
+sns.scatterplot(data=normal, x='Amount', y='Time', color=color_palette[0], label='Normal', ax=ax)
+sns.scatterplot(data=fraud, x='Amount', y='Time', color=color_palette[1], label='Anomaly', ax=ax)
+
+ax.set_xlabel('Amount', fontweight='bold', fontfamily='serif')
+ax.set_ylabel('Time', fontweight='bold', fontfamily='serif')
+ax.legend()
+
+ax.tick_params(left=True, bottom=True)
+ax.grid(True, color='#000000', linestyle=':', alpha=0.5)
+
+for spine in ['top', 'right', 'left', 'bottom']:
+    ax.spines[spine].set_visible(False)
+
+plt.show()
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import classification_report
+
+# Step 3: Model Training
+X_train_resampled, X_test, y_train_resampled, y_test = train_test_split(X_train_resampled, y_train_resampled, test_size=0.2, random_state=42)
+
+model = LogisticRegression()
+model.fit(X_train_resampled, y_train_resampled)
+
+# Step 4: Model Evaluation
+y_pred = model.predict(X_test)
+print(classification_report(y_test, y_pred))
+ Define classifiers
+classifiers = {
+    ' LogisticRegression': LogisticRegression(max_iter=1000,random_state=42),
+    'DecisionTreeClassifier': DecisionTreeClassifier(random_state=42),
+    'Random Forest': RandomForestClassifier(n_estimators=50,random_state=42)}
+rom sklearn.model_selection import train_test_split
+from sklearn.metrics import classification_report
+
+# Split the resampled data into training and testing sets
+X_train_resampled, X_test, y_train_resampled, y_test = train_test_split(X_train_resampled, y_train_resampled, test_size=0.2, random_state=42)
+
+# Define classifiers
+classifiers = {
+    'LogisticRegression': LogisticRegression(max_iter=1000, random_state=42),
+    'DecisionTreeClassifier': DecisionTreeClassifier(random_state=42),
+    'RandomForestClassifier': RandomForestClassifier(n_estimators=50, random_state=42)}
+
+# Train and evaluate each classifier
+for clf_name, clf in classifiers.items():
+    # Train the classifier
+    clf.fit(X_train_resampled, y_train_resampled)
+
+    # Make predictions on the test data
+    y_pred = clf.predict(X_test)
+
+    # Evaluate the classifier
+    print(f"\n{clf_name} Results:")
+    print(classification_report(y_test, y_pred))
+for name, classifier in classifiers.items():
+    print(f"\nTraining and evaluating {name}...")
+    classifier.fit(X_train_resampled,y_train_resampled)
+    predictions = classifier.predict(X_test)
+
+    # Evaluate the model
+    accuracy = accuracy_score(y_test, predictions)
+
+    # Display classification report
+    report = classification_report(y_test, predictions)
+
+    # Print the results
+    print(f'{name} Accuracy: {accuracy:.2f}')
+    print(f'{name} Classification Report:')
+    print(report)
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# Create a figure and an axes
+fig, ax = plt.subplots()
+fig.patch.set_facecolor(background_color)
+ax.set_facecolor(background_color)
+ax.set_title('Correlation Matrix', fontweight='bold', fontfamily='serif')
+sns.heatmap(new_df.corr(), cmap='coolwarm', ax=ax)
+
+
+plt.show()
